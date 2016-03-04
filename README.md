@@ -7,12 +7,17 @@ PHP library to embed svg icons in the html pages so you can use css to change th
 * PHP 5.4+
 * SimpleXMLElement (extension enabled by default)
 
+## Installation
+
+This package is installable and autoloadable via Composer as [oscarotero/inline-svg](https://packagist.org/packages/oscarotero/inline-svg).
+
+```
+$ composer require oscarotero/inline-svg
+```
+
 ## Usage:
 
 ```php
-//Include the autoload if you don't use composer
-include 'icon-embedder/src/autoloader.php'
-
 use InlineSvg\IconSet;
 use InlineSvg\Sources\FileSystem;
 
