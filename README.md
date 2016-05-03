@@ -18,7 +18,7 @@ $ composer require oscarotero/inline-svg
 ## Usage:
 
 ```php
-use InlineSvg\IconSet;
+use InlineSvg\Collection;
 use InlineSvg\Sources\FileSystem;
 
 //Create a file system source pointing to the directory where the svg files are stored.
