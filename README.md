@@ -19,13 +19,12 @@ $ composer require oscarotero/inline-svg
 
 ```php
 use InlineSvg\Collection;
-use InlineSvg\Sources\FileSystem;
+use InlineSvg\Transformers\Cleaner;
 
-//Create a file system source pointing to the directory where the svg files are stored.
-$source = new FileSystem('path/to/svg/files');
+$icons = Collection::fromPath('path/to/svg/files');
 
-//Create an Collection instance passing the source
-$icons = new Collection($source);
+//Add a cleaner transformer to remove ids
+$icons->addTransformer(new Cleaner());
 
 //Insert the svg code in your html templates:
 echo $icons->get('edit'); // <svg ... </svg>
@@ -36,3 +35,4 @@ echo $icons->get('edit')->withAttribute('class', 'big-icon'); // <svg class="big
 //Make the svg accesible
 echo $icons->get('edit')->withA11y('The edit icon'); // <svg role="img" aria-labelledby="icon-edit-123-title"><title id="icon-edit-123-title">The edit icon</title> .. </svg>
 ```
+

@@ -2,15 +2,20 @@
 
 namespace InlineSvg;
 
+use DOMDocument;
 use DOMElement;
 
 class Svg
 {
-    private $svg;
+    private $dom;
 
-    public function __construct(DOMElement $svg)
+    public function __construct(DOMDocument $dom)
     {
-        $this->svg = $svg;
+        if ($dom->documentElement->tagName !== 'svg') {
+            throw new \RuntimeException(sprintf('Only <svg> elements allowed. <%s> found', $dom->documentElement->tagName));
+        }
+
+        $this->dom = $dom;
     }
 
     /**
@@ -20,7 +25,7 @@ class Svg
      */
     public function get()
     {
-        return $this->svg;
+        return $this->dom->documentElement;
     }
 
     /**
@@ -28,7 +33,7 @@ class Svg
      */
     public function __clone()
     {
-        $this->svg = clone $this->svg;
+        $this->dom = clone $this->dom;
     }
 
     /**
@@ -43,7 +48,7 @@ class Svg
     {
         $clone = clone $this;
 
-        $clone->svg->setAttribute($name, $value);
+        $clone->dom->documentElement->setAttribute($name, $value);
 
         return $clone;
     }
@@ -60,7 +65,7 @@ class Svg
         $clone = clone $this;
 
         foreach ($attributes as $name => $value) {
-            $clone->svg->setAttribute($name, $value);
+            $clone->dom->documentElement->setAttribute($name, $value);
         }
 
         return $clone;
@@ -78,20 +83,20 @@ class Svg
     {
         $clone = clone $this;
 
-        $clone->svg->setAttribute('role', 'img');
+        $clone->dom->documentElement->setAttribute('role', 'img');
 
         $ids = [];
 
         if ($title) {
-            self::getOrCreateNode($clone->svg, 'title', $title)->setAttribute('id', $ids[] = uniqid('svg_title_'));
+            self::getOrCreateNode($clone->dom->documentElement, 'title', $title)->setAttribute('id', $ids[] = uniqid('svg_title_'));
         }
 
         if ($desc) {
-            self::getOrCreateNode($clone->svg, 'desc', $desc)->setAttribute('id', $ids[] = uniqid('svg_desc_'));
+            self::getOrCreateNode($clone->dom->documentElement, 'desc', $desc)->setAttribute('id', $ids[] = uniqid('svg_desc_'));
         }
 
         if ($ids) {
-            $clone->svg->setAttribute('aria-labelledby', implode(' ', $ids));
+            $clone->dom->documentElement->setAttribute('aria-labelledby', implode(' ', $ids));
         }
 
         return $clone;
@@ -104,7 +109,7 @@ class Svg
      */
     public function __toString()
     {
-        return $this->svg->C14N();
+        return $this->dom->C14N();
     }
 
     /**

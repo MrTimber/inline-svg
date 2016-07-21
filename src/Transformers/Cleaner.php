@@ -2,17 +2,22 @@
 
 namespace InlineSvg\Transformers;
 
-use SimpleXMLElement;
+use DOMDocument;
 
 class Cleaner
 {
     /**
      * Execute the transformer.
      *
-     * @param SimpleXMLElement
+     * @param DOMDocument $dom
      */
-    public function __invoke(SimpleXMLElement $svg)
+    public function __invoke(DOMDocument $dom)
     {
-        $this->addSource($source);
+        $elements = $dom->getElementsByTagName('*');
+
+        //Remove ids
+        foreach ($elements as $element) {
+            $element->removeAttribute('id');
+        }
     }
 }

@@ -17,9 +17,8 @@ class InlineSvgTest extends PHPUnit_Framework_TestCase
 
         self::$collection = new Collection(self::$source);
 
-        self::$collection->addTransformer(function ($element) {
-            $element->setAttribute('bar', 'foo');
-            return $element;
+        self::$collection->addTransformer(function ($dom) {
+            $dom->documentElement->setAttribute('bar', 'foo');
         });
     }
 

@@ -2,9 +2,10 @@
 include dirname(__DIR__).'/src/autoloader.php';
 
 use InlineSvg\Collection;
-use InlineSvg\Sources\FileSystem;
+use InlineSvg\Transformers\Cleaner;
 
-$icons = new Collection(new FileSystem(__DIR__.'/icons', ['pad' => 'gaming']));
+$icons = Collection::fromPath(__DIR__.'/icons', ['pad' => 'gaming']);
+$icons->addTransformer(new Cleaner());
 ?>
 
 <!DOCTYPE html>

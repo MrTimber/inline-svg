@@ -2,7 +2,7 @@
 
 namespace InlineSvg\Sources;
 
-use DOMElement;
+use DOMDocument;
 
 interface SourceInterface
 {
@@ -11,7 +11,7 @@ interface SourceInterface
      *
      * @param string $name The svg name
      *
-     * @return DOMElement
+     * @return DOMDocument
      */
     public function get($name);
 
