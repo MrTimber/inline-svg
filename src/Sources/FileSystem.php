@@ -13,6 +13,7 @@ class FileSystem implements SourceInterface
      * Constructor.
      *
      * @param string $basePath The directory where the icon files are placed
+     * @param array  $map      Optional svg renamed
      */
     public function __construct($basePath, array $map = [])
     {

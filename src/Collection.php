@@ -12,6 +12,17 @@ class Collection
     protected $transformers = [];
 
     /**
+     * Simple factory to create an instance using a directory
+     * 
+     * @param string $path
+     * @param array  $map
+     */
+    public static function fromPath($path, array $map = [])
+    {
+        return new static(new Sources\FileSystem($path, $map));
+    }
+
+    /**
      * Constructor.
      *
      * @param SourceInterface $source The source class used to get the svg icons
