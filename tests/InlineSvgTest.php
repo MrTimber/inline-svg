@@ -18,7 +18,7 @@ class InlineSvgTest extends PHPUnit_Framework_TestCase
         self::$collection = new Collection(self::$source);
 
         self::$collection->addTransformer(function ($element) {
-            $element->addAttribute('bar', 'foo');
+            $element->setAttribute('bar', 'foo');
             return $element;
         });
     }
@@ -58,9 +58,9 @@ class InlineSvgTest extends PHPUnit_Framework_TestCase
 
         $element = $svg->get('gaming')->get();
 
-        $this->assertEquals(1, $element->count());
-        $this->assertEquals(1, $element->g->count());
-        $this->assertEquals(4, $element->g->path->count());
+        $this->assertEquals(1, $element->childNodes->length);
+        $this->assertEquals(1, $element->getElementsByTagName('g')->length);
+        $this->assertEquals(4, $element->getElementsByTagName('path')->length);
 
         return $svg;
     }
@@ -72,14 +72,12 @@ class InlineSvgTest extends PHPUnit_Framework_TestCase
         $gaming = $svg->get('gaming');
         $element = $gaming->get();
 
-        $attributes = $element->attributes();
-
-        $this->assertEquals('foo', $attributes->bar);
-        $this->assertEquals('1.1', $attributes->version);
-        $this->assertEquals('512px', $attributes->width);
-        $this->assertEquals('512px', $attributes->height);
-        $this->assertEquals('0px', $attributes->x);
-        $this->assertEquals('0px', $attributes->y);
+        $this->assertEquals('foo', $element->getAttribute('bar'));
+        $this->assertEquals('1.1', $element->getAttribute('version'));
+        $this->assertEquals('512px', $element->getAttribute('width'));
+        $this->assertEquals('512px', $element->getAttribute('height'));
+        $this->assertEquals('0px', $element->getAttribute('x'));
+        $this->assertEquals('0px', $element->getAttribute('y'));
 
         $gaming2 = $gaming->withAttributes([
             'x' => '10px',
@@ -87,14 +85,14 @@ class InlineSvgTest extends PHPUnit_Framework_TestCase
             'new-attribute' => 'value',
         ]);
 
-        $attributes2 = $gaming2->get()->attributes();
+        $element2 = $gaming2->get();
 
-        $this->assertEquals('512px', $attributes2->height);
-        $this->assertEquals('10px', $attributes2->x);
-        $this->assertEquals('23', $attributes2->y);
-        $this->assertEquals('value', $attributes2['new-attribute']);
+        $this->assertEquals('512px', $element2->getAttribute('height'));
+        $this->assertEquals('10px', $element2->getAttribute('x'));
+        $this->assertEquals('23', $element2->getAttribute('y'));
+        $this->assertEquals('value', $element2->getAttribute('new-attribute'));
 
-        $this->assertEquals('0px', $attributes->x);
+        $this->assertEquals('0px', $element->getAttribute('x'));
     }
 
     public function testAccesibility()
@@ -103,34 +101,19 @@ class InlineSvgTest extends PHPUnit_Framework_TestCase
 
         $gaming = $svg->get('gaming');
         $element = $gaming->get();
-        $attributes = $element->attributes();
 
-        $this->assertNull($attributes->role);
-        $this->assertEquals(0, $element->title->count());
-        $this->assertEquals(0, $element->desc->count());
+        $this->assertFalse($element->hasAttribute('role'));
+        $this->assertEquals(0, $element->getElementsByTagName('title')->length);
+        $this->assertEquals(0, $element->getElementsByTagName('desc')->length);
 
         $gaming = $gaming->withA11y('The title', 'the long description');
 
         $element = $gaming->get();
-        $attributes = $element->attributes();
 
-        $this->assertEquals('img', $attributes->role);
-        $this->assertEquals(1, $element->title->count());
-        $this->assertEquals(1, $element->desc->count());
-        $this->assertEquals('The title', (string) $element->title);
-        $this->assertEquals('the long description', (string) $element->desc);
-    }
-
-    public function testTemplate()
-    {
-        $svg = new Template(self::$source);
-
-        $this->assertInstanceOf('InlineSvg\Svg', $svg->get('gaming'));
-
-        $this->assertEquals($svg->getTemplate()->get()->g->count(), 1);
-
-        $svg->get('days');
-
-        $this->assertEquals($svg->getTemplate()->get()->g->count(), 2);
+        $this->assertEquals('img', $element->getAttribute('role'));
+        $this->assertEquals(1, $element->getElementsByTagName('title')->length);
+        $this->assertEquals(1, $element->getElementsByTagName('title')->length);
+        $this->assertEquals('The title', $element->getElementsByTagName('title')[0]->nodeValue);
+        $this->assertEquals('the long description', $element->getElementsByTagName('desc')[0]->nodeValue);
     }
 }

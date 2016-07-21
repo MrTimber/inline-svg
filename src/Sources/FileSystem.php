@@ -2,7 +2,8 @@
 
 namespace InlineSvg\Sources;
 
-use SimpleXMLElement;
+use DOMDocument;
+use DOMElement;
 
 class FileSystem implements SourceInterface
 {
@@ -34,7 +35,16 @@ class FileSystem implements SourceInterface
      */
     public function get($name)
     {
-        return new SimpleXMLElement($this->getPath($name), LIBXML_NOBLANKS | LIBXML_NOERROR, true);
+        $dom = new DOMDocument();
+        $dom->preserveWhiteSpace = false;
+        $dom->load($this->getPath($name), LIBXML_NOBLANKS | LIBXML_NOERROR);
+        $svg = $dom->documentElement;
+
+        if ($svg->tagName !== 'svg') {
+            throw new \RuntimeException(sprintf('Only <svg> elements allowed. <%s> found', $svg->tagName));
+        }
+
+        return $svg;
     }
 
     /**

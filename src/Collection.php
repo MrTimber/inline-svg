@@ -3,7 +3,7 @@
 namespace InlineSvg;
 
 use InlineSvg\Sources\SourceInterface;
-use SimpleXMLElement;
+use DOMElement;
 
 class Collection
 {
@@ -63,11 +63,11 @@ class Collection
     /**
      * Transform an element
      * 
-     * @param SimpleXMLElement $element
+     * @param DOMElement $element
      * 
-     * @return SimpleXMLElement
+     * @return DOMElement
      */
-    protected function transform(SimpleXMLElement $element)
+    protected function transform(DOMElement $element)
     {
         foreach ($this->transformers as $transformer) {
             $element = $transformer($element);
@@ -83,7 +83,7 @@ class Collection
      *
      * @throws NotFoundException
      * 
-     * @return SimpleXMLElement
+     * @return DOMElement
      */
     protected function load($name)
     {

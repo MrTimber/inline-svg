@@ -2,13 +2,13 @@
 
 namespace InlineSvg;
 
-use SimpleXMLElement;
+use DOMElement;
 
 class Svg
 {
     private $svg;
 
-    public function __construct(SimpleXMLElement $svg)
+    public function __construct(DOMElement $svg)
     {
         $this->svg = $svg;
     }
@@ -16,7 +16,7 @@ class Svg
     /**
      * Return the svg.
      * 
-     * @return SimpleXMLElement
+     * @return DOMElement
      */
     public function get()
     {
@@ -42,13 +42,8 @@ class Svg
     public function withAttribute($name, $value)
     {
         $clone = clone $this;
-        $attributes = $clone->svg->attributes();
 
-        if (!empty($attributes->$name)) {
-            $attributes->$name = $value;
-        } else {
-            $clone->svg->addAttribute($name, $value);
-        }
+        $clone->svg->setAttribute($name, $value);
 
         return $clone;
     }
@@ -65,7 +60,7 @@ class Svg
         $clone = clone $this;
 
         foreach ($attributes as $name => $value) {
-            $clone = $clone->withAttribute($name, $value);
+            $clone->svg->setAttribute($name, $value);
         }
 
         return $clone;
@@ -83,20 +78,20 @@ class Svg
     {
         $clone = clone $this;
 
-        $clone->svg->addAttribute('role', 'img');
+        $clone->svg->setAttribute('role', 'img');
 
         $ids = [];
 
         if ($title) {
-            $clone->svg->addChild('title', $title)->addAttribute('id',  $ids[] = uniqid('svg_title_'));
+            self::getOrCreateNode($clone->svg, 'title', $title)->setAttribute('id', $ids[] = uniqid('svg_title_'));
         }
 
         if ($desc) {
-            $clone->svg->addChild('desc', $desc)->addAttribute('id', $ids[] = uniqid('svg_desc_'));
+            self::getOrCreateNode($clone->svg, 'desc', $desc)->setAttribute('id', $ids[] = uniqid('svg_desc_'));
         }
 
         if ($ids) {
-            $clone->svg->addAttribute('aria-labelledby', implode(' ', $ids));
+            $clone->svg->setAttribute('aria-labelledby', implode(' ', $ids));
         }
 
         return $clone;
@@ -109,6 +104,32 @@ class Svg
      */
     public function __toString()
     {
-        return preg_replace('|^.*(<svg.*</svg>).*$|Us', '$1', $this->svg->asXML());
+        return $this->svg->C14N();
+    }
+
+    /**
+     * Returns a node by tagName. Create if it doesn't exist
+     * 
+     * @param DOMElement $svg
+     * @param string     $tagName
+     * @param string     $value
+     * 
+     * @return DOMElement
+     */
+    private static function getOrCreateNode(DOMElement $svg, $tagName, $value)
+    {
+        $node = $svg->getElementsByTagName($tagName);
+
+        if ($node->length) {
+            $node = $node->get(0);
+            $node->nodeValue = $value;
+            
+            return $node;
+        }
+
+        $newNode = new DOMElement($tagName, $value);
+        $svg->appendChild($newNode);
+
+        return $newNode;
     }
 }
