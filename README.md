@@ -5,7 +5,7 @@ PHP library to embed svg icons in the html pages so you can use css to change th
 ## Requirements:
 
 * PHP 5.4+
-* SimpleXMLElement (extension enabled by default)
+* [DOMDocument extension](http://php.net/DOMDocument) (enabled in PHP by default)
 
 ## Installation
 
@@ -26,7 +26,7 @@ $icons = Collection::fromPath('path/to/svg/files');
 //Add a cleaner transformer to remove ids
 $icons->addTransformer(new Cleaner());
 
-//Insert the svg code in your html templates:
+//Insert the svg code of the file 'edit.svg':
 echo $icons->get('edit'); // <svg ... </svg>
 
 //Modify any attribute
