@@ -126,7 +126,7 @@ class Svg
         $node = $svg->getElementsByTagName($tagName);
 
         if ($node->length) {
-            $node = $node->get(0);
+            $node = $node->item(0);
             $node->nodeValue = $value;
             
             return $node;
