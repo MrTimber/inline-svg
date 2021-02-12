@@ -33,8 +33,8 @@ $icons->addTransformer(new Cleaner());
 			}
 		</style>
 	</head>
-	<body>
 
+	<body>
 	<?= $icons->get('days')->withAttributes([
         'class' => 'icon-red',
         'width' => 20,
@@ -43,5 +43,29 @@ $icons->addTransformer(new Cleaner());
     ?>
 
 	<?= $icons->get('pad')->withA11y(); ?>
+
+    <?= $icons->get('icon-rs-fb')->withAttributes([
+        'class' => 'icon-red',
+        'width' => 20,
+        'height' => 20,
+    ])->withA11y(); ?>
+
+    <?= $icons->get('icon-rs-insta')->withAttributes([
+        'class' => 'icon-red',
+        'width' => 20,
+        'height' => 20,
+    ])->withA11y(); ?>
+
+    <?= $icons->get('icon-rs-linkedin')->withAttributes([
+        'class' => 'icon-red',
+        'width' => 20,
+        'height' => 20,
+    ])->withA11y(); ?>
+
+    <?= $icons->get('icon-rs-twitter')->withAttributes([
+        'class' => 'icon-red',
+        'width' => 20,
+        'height' => 20,
+    ])->withA11y(); ?>
 	</body>
 </html>

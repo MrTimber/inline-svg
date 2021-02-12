@@ -15,17 +15,34 @@ class Cleaner
     {
         $elements = $dom->getElementsByTagName('*');
 
-        //Remove ids
+        // Replace IDs by uniq IDs
+        $id_array = [];
         foreach ($elements as $element) {
-            $element->removeAttribute('id');
+            $id = $element->getAttribute('id');
+            if ($id) {
+                $new_id = uniqid();
+                $id_array["#$id"] = "#$new_id";
+                $element->setAttribute('id', $new_id);
+            }
+        }
+        foreach ($elements as $element) {
+            if ($element->hasAttributes()) {
+                foreach ($element->attributes as $attr) {
+                    $name  = $attr->nodeName;
+                    $value = $attr->nodeValue;
+                    if (array_key_exists($value, $id_array)) {
+                        $element->setAttribute($name, $id_array[$value]);
+                    }
+                }
+            }
         }
 
-        //Remove <desc>
+        // Remove <desc>
         foreach ($dom->getElementsByTagName('desc') as $element) {
             $element->parentNode->removeChild($element);
         }
 
-        //Remove empty <defs>
+        // Remove empty <defs>
         foreach ($dom->getElementsByTagName('defs') as $element) {
             if (!$element->hasChildNodes()) {
                 $element->parentNode->removeChild($element);
