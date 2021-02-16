@@ -48,5 +48,10 @@ class Cleaner
                 $element->parentNode->removeChild($element);
             }
         }
+
+        // Remove <title>
+        foreach ($dom->getElementsByTagName('title') as $element) {
+            $element->parentNode->removeChild($element);
+        }
     }
 }
